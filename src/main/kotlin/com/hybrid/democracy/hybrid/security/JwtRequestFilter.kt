@@ -1,5 +1,7 @@
 package com.hybrid.democracy.hybrid.security
 
+import io.jsonwebtoken.ExpiredJwtException
+import io.jsonwebtoken.MalformedJwtException
 import jakarta.servlet.FilterChain
 import jakarta.servlet.http.HttpServletRequest
 import jakarta.servlet.http.HttpServletResponse
@@ -24,9 +26,17 @@ class JwtRequestFilter @Autowired constructor(
         var username: String? = null
         var jwt: String? = null
 
-        if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
-            jwt = authorizationHeader.substring(7)
-            username = jwtUtil.extractAllClaims(jwt).subject
+        if (authorizationHeader != null && authorizationHeader.startsWith("Bearer")) {
+            jwt = authorizationHeader.substring(7).trim()
+            try {
+                username = jwtUtil.extractAllClaims(jwt).subject
+            } catch (e: IllegalArgumentException) {
+                logger.warn("Unable to get JWT Token")
+            } catch (e: ExpiredJwtException) {
+                logger.warn("JWT Token has expired")
+            } catch (e: MalformedJwtException) {
+                logger.warn("Invalid JWT Token")
+            }
         }
 
         if (username != null && SecurityContextHolder.getContext().authentication == null) {

@@ -8,7 +8,7 @@ import java.util.*
 
 @Component
 class JwtUtil {
-    private val secretKey = "your_secret_key"
+    private val secretKey = "Yn2kjibddFAWtnPJ2AFlL8WXmohJMCvigQggaEypa5E"
 
     fun generateToken(username: String): String {
         val claims: Map<String, Any> = HashMap()
