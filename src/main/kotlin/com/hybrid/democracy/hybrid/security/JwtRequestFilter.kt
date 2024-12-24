@@ -35,6 +35,7 @@ class JwtRequestFilter @Autowired constructor(
             } catch (e: ExpiredJwtException) {
                 logger.warn("JWT Token has expired")
             } catch (e: MalformedJwtException) {
+                logger.warn("jwt: $jwt")
                 logger.warn("Invalid JWT Token")
             }
         }
