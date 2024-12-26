@@ -20,6 +20,10 @@ data class Citizen(
 
     @field:NotBlank
     @Column(nullable = false, unique = true)
-    val email: String
+    val email: String,
+
+//    @OneToMany(mappedBy = "citizen", cascade = [CascadeType.ALL], fetch = FetchType.LAZY)
+//    val bills: List<Bill> = mutableListOf()
+//    val bills: List<Bill> = mutableListOf()
 
 )

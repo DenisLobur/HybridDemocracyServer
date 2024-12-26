@@ -23,9 +23,15 @@ class BillController(private val billService: BillService) {
         return ResponseEntity(bill, HttpStatus.OK)
     }
 
-    @GetMapping("/bill/{citizenId}")
-    fun getBillByTitle(@PathVariable citizenId: Long): ResponseEntity<List<Bill>> {
+    @GetMapping("/citizen/{citizenId}")
+    fun getBillByCitizenId(@PathVariable citizenId: Long): ResponseEntity<List<Bill>> {
         val bills = billService.getBillsByCitizenId(citizenId)
         return ResponseEntity(bills, HttpStatus.OK)
+    }
+
+    @GetMapping("/fetch/{citizenId}")
+    fun fetchAndStoreBillData(@PathVariable citizenId: Long): ResponseEntity<Bill> {
+        val bill = billService.fetchAndStoreBillData(citizenId)
+        return ResponseEntity(bill, HttpStatus.CREATED)
     }
 }
