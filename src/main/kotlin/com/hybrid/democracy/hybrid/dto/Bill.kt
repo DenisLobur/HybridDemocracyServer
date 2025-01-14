@@ -2,6 +2,7 @@ package com.hybrid.democracy.hybrid.dto
 
 import jakarta.persistence.*
 import jakarta.validation.constraints.NotBlank
+import jakarta.validation.constraints.NotNull
 
 @Entity
 @Table(name = "bill")
@@ -17,19 +18,24 @@ data class Bill(
     @Column(nullable = false, unique = false)
     val isVoted: Boolean,
 
-    @field:NotBlank
     @Column(nullable = false, unique = false)
-    val date: String,
+    val date: Int,
 
-    @field:NotBlank
+    @field:NotNull
+    @Column(nullable = false, unique = true)
+    val dokId: Int,
+
     @Column(nullable = false, unique = false)
-    val description: String,
+    val orgId: Int,
 
     @Column(nullable = false, unique = false)
     val rating: Int,
 
     @Column(nullable = false, unique = false)
     val feedback: String,
+
+    @Column(nullable = false, unique = false)
+    val nreg: String,
 
 //    @ManyToOne(fetch = FetchType.LAZY)
 //    @JoinColumn(name = "citizen_id")

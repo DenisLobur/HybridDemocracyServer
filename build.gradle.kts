@@ -43,8 +43,8 @@ dependencies {
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.5.1")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-reactor:1.5.1")
 
-//    implementation("org.webjars:webjars-locator:0.45")
-//    implementation("io.github.classgraph:classgraph:4.8.154")
+    implementation("org.mapstruct:mapstruct:1.5.3.Final")
+    annotationProcessor("org.mapstruct:mapstruct-processor:1.5.3.Final")
 
     implementation("org.springframework.ai:spring-ai-openai-spring-boot-starter")
 
