@@ -23,6 +23,15 @@ class CitizenService(private val citizenRepository: CitizenRepository) {
         return citizenRepository.save(citizen)
     }
 
+    fun authenticate(email: String, password: String): Citizen? {
+        val citizen = citizenRepository.findByEmail(email)
+        if (citizen == null || citizen.password != password) {
+            return null
+        }
+
+        return citizen
+    }
+
     fun getCitizenByName(name: String): Citizen? {
         return citizenRepository.findByName(name)
     }
@@ -30,4 +39,5 @@ class CitizenService(private val citizenRepository: CitizenRepository) {
     fun getCitizenByEmail(email: String): Citizen? {
         return citizenRepository.findByEmail(email)
     }
+
 }

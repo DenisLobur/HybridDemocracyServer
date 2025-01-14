@@ -14,4 +14,14 @@ class OpenAIService(private val chatModel: ChatModel) {
 
         return response.result.output.content
     }
+
+    fun summarizeText(longText: String): String {
+        val promptTemplate = PromptTemplate("Summarize the following text into short bullet points:\n\n$longText")
+        val prompt = promptTemplate.create()
+        val response = chatModel.call(prompt)
+
+        return response.result.output.content
+    }
+
+
 }
