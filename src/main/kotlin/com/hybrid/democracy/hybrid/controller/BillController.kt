@@ -1,8 +1,11 @@
 package com.hybrid.democracy.hybrid.controller
 
+import com.hybrid.democracy.hybrid.controller.CitizenController.Companion
 import com.hybrid.democracy.hybrid.dto.Bill
 import com.hybrid.democracy.hybrid.dto.BillDTO
 import com.hybrid.democracy.hybrid.service.BillService
+import org.apache.commons.logging.Log
+import org.apache.commons.logging.LogFactory
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
@@ -10,6 +13,10 @@ import org.springframework.web.bind.annotation.*
 @RestController
 @RequestMapping("/bills")
 class BillController(private val billService: BillService) {
+
+    companion object {
+        private val logger: Log = LogFactory.getLog(CitizenController::class.java)
+    }
 
     @PostMapping
     fun createBill(@RequestBody billDTO: BillDTO): ResponseEntity<Bill> {
@@ -38,8 +45,8 @@ class BillController(private val billService: BillService) {
 
     @GetMapping("/pull/{citizenId}")
     fun pullBillsForCitizen(@PathVariable citizenId: Long): ResponseEntity<List<BillDTO>> {
+        logger.info("hitting /pull/{$citizenId} endpoint")
         val billsList = billService.getBillsByCitizenId(citizenId)
-
         return ResponseEntity(billsList, HttpStatus.OK)
     }
 }
