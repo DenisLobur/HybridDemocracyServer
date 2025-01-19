@@ -11,4 +11,7 @@ interface BillRepository : JpaRepository<Bill, Long> {
 
     @Query("SELECT b FROM Bill b WHERE b.citizenId = :citizenId")
     fun findByCitizenId(citizenId: Long): List<Bill>
+
+    @Query("SELECT b FROM Bill b WHERE b.nreg = :nreg")
+    fun findBillByNreg(nreg: String): Bill?
 }

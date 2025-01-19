@@ -1,6 +1,7 @@
 package com.hybrid.democracy.hybrid.dto
 
 data class BillDTO(
+    val id: Long,
     val title: String,
     val isVoted: Boolean,
     val date: Int,

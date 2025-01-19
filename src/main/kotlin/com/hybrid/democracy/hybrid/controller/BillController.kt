@@ -38,8 +38,8 @@ class BillController(private val billService: BillService) {
 
     @GetMapping("/save/{citizenId}")
     fun fetchAndStoreBillData(@PathVariable citizenId: Long): ResponseEntity<Void> {
+        logger.info("hitting /save/{$citizenId} endpoint")
         billService.fetchAndStoreBillData(citizenId)
-
         return ResponseEntity(HttpStatus.OK)
     }
 
@@ -48,5 +48,12 @@ class BillController(private val billService: BillService) {
         logger.info("hitting /pull/{$citizenId} endpoint")
         val billsList = billService.getBillsByCitizenId(citizenId)
         return ResponseEntity(billsList, HttpStatus.OK)
+    }
+
+    @GetMapping("/text/{nreg}")
+    fun pullBillTextByNreg(@PathVariable nreg: String): ResponseEntity<String> {
+        logger.info("hitting /text/{$nreg} endpoint")
+        val billText = billService.fetchBillTextByNReg(nreg)
+        return ResponseEntity(billText, HttpStatus.OK)
     }
 }

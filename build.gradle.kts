@@ -47,6 +47,8 @@ dependencies {
     implementation("org.mapstruct:mapstruct:1.5.3.Final")
     kapt("org.mapstruct:mapstruct-processor:1.5.3.Final")
 
+    implementation("org.jsoup:jsoup:1.15.3")
+
     implementation("org.springframework.ai:spring-ai-openai-spring-boot-starter")
 
     runtimeOnly("io.jsonwebtoken:jjwt-impl:0.11.5")

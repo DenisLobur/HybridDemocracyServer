@@ -1,11 +1,15 @@
 package com.hybrid.democracy.hybrid.service
 
+import com.hybrid.democracy.hybrid.controller.CitizenController
 import com.hybrid.democracy.hybrid.dto.Bill
 import com.hybrid.democracy.hybrid.dto.BillDTO
 import com.hybrid.democracy.hybrid.dto.LawBillFullDTO
 import com.hybrid.democracy.hybrid.mapper.BillMapper
 import com.hybrid.democracy.hybrid.repository.BillRepository
 import com.hybrid.democracy.hybrid.repository.CitizenRepository
+import org.apache.commons.logging.Log
+import org.apache.commons.logging.LogFactory
+import org.jsoup.Jsoup
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import org.springframework.web.client.RestTemplate
@@ -16,6 +20,10 @@ class BillService(
     private val citizenRepository: CitizenRepository,
     private val restTemplate: RestTemplate
 ) {
+
+    companion object {
+        private val logger: Log = LogFactory.getLog(BillService::class.java)
+    }
 
     private val billMapper: BillMapper = BillMapper.INSTANCE
 
@@ -53,13 +61,19 @@ class BillService(
 
     @Transactional
     fun fetchAndStoreBillData(citizenId: Long) {
-        val url = "https://data.rada.gov.ua/laws/main/r[/page1].json"
-        val response = restTemplate.getForObject(url, LawBillFullDTO::class.java)
+        val urlBill = "https://data.rada.gov.ua/laws/main/r[/page1].json"
+        val responseBill = restTemplate.getForObject(urlBill, LawBillFullDTO::class.java)
+
 
 //        val citizen = citizenRepository.findById(citizenId)
 //            .orElseThrow { IllegalArgumentException("Citizen with ID $citizenId not found") }
 
-        for (lawBill in response?.list?.take(10) ?: emptyList()) {
+        for (lawBill in responseBill?.list?.take(10) ?: emptyList()) {
+//            val urlText = "https://data.rada.gov.ua/laws/show/${lawBill.nreg}.txt"
+//            val responseText = restTemplate.getForObject(urlText, String::class.java)
+//
+//            logger.info("Bill url: $urlText")
+
             val bill = Bill(
                 title = lawBill.nazva,
                 isVoted = false,
@@ -74,17 +88,27 @@ class BillService(
 
             // TODO: Make sure only unique dok_id is saved
             billRepository.save(bill)
+            //Thread.sleep(6000)
         }
+    }
 
-//        val bill = Bill(
-//            title = "Fetched Bill 2",
-//            isVoted = false,
-//            date = "2023-10-01", // Example date, you can parse the actual date from the response if needed
-//            description = response?.take(100) ?: "No description",
-//            rating = 0,
-//            feedback = "",
-//            citizenId = citizenId
-//        )
+    @Transactional
+    fun fetchBillTextByNReg(nreg: String): String {
+        val urlText = "https://data.rada.gov.ua/laws/show/$nreg.txt"
+        logger.info("Bill url: $urlText")
+        val responseText = restTemplate.getForObject(urlText, String::class.java)
 
+        val plainText = responseText?.let { Jsoup.parse(it).text() } ?: ""
+
+        logger.info("Bill text: $plainText")
+        return plainText
+
+//        val bill: Bill? = billRepository.findBillByNreg(nreg)
+//
+//        if (bill != null) {
+//            bill.feedback = urlText
+//            billRepository.save(bill)
+//        }
+//
     }
 }
