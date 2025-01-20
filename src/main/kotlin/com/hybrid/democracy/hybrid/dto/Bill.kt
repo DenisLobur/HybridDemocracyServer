@@ -16,7 +16,7 @@ data class Bill(
     val title: String,
 
     @Column(nullable = false, unique = false)
-    val isVoted: Boolean,
+    var isVoted: Boolean,
 
     @Column(nullable = false, unique = false)
     val date: Int,
@@ -29,10 +29,10 @@ data class Bill(
     val orgId: Int,
 
     @Column(nullable = false, unique = false)
-    val rating: Int,
+    var rating: Int,
 
     @Column(nullable = false, unique = false)
-    val feedback: String,
+    var feedback: String,
 
     @Column(nullable = false, unique = false)
     val nreg: String,

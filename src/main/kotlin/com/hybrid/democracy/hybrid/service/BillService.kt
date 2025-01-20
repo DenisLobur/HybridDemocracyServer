@@ -111,4 +111,15 @@ class BillService(
 //        }
 //
     }
+
+    @Transactional
+    fun voteBill(billId: Long, rating: Int, feedback: String) {
+        val bill = billRepository.findById(billId)
+            .orElseThrow { IllegalArgumentException("Bill with ID $billId not found") }
+
+        bill.rating = rating
+        bill.feedback = feedback
+        bill.isVoted = true
+        billRepository.save(bill)
+    }
 }

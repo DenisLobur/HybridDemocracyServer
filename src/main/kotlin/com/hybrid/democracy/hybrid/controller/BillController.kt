@@ -1,8 +1,8 @@
 package com.hybrid.democracy.hybrid.controller
 
-import com.hybrid.democracy.hybrid.controller.CitizenController.Companion
 import com.hybrid.democracy.hybrid.dto.Bill
 import com.hybrid.democracy.hybrid.dto.BillDTO
+import com.hybrid.democracy.hybrid.dto.VoteDTO
 import com.hybrid.democracy.hybrid.service.BillService
 import org.apache.commons.logging.Log
 import org.apache.commons.logging.LogFactory
@@ -37,7 +37,7 @@ class BillController(private val billService: BillService) {
 //    }
 
     @GetMapping("/save/{citizenId}")
-    fun fetchAndStoreBillData(@PathVariable citizenId: Long): ResponseEntity<Void> {
+    fun saveBillsForCitizenById(@PathVariable citizenId: Long): ResponseEntity<Void> {
         logger.info("hitting /save/{$citizenId} endpoint")
         billService.fetchAndStoreBillData(citizenId)
         return ResponseEntity(HttpStatus.OK)
@@ -55,5 +55,12 @@ class BillController(private val billService: BillService) {
         logger.info("hitting /text/{$nreg} endpoint")
         val billText = billService.fetchBillTextByNReg(nreg)
         return ResponseEntity(billText, HttpStatus.OK)
+    }
+
+    @PostMapping("/vote/{billId}")
+    fun voteBill(@PathVariable billId: Long, @RequestBody bill: VoteDTO): ResponseEntity<Boolean> {
+        logger.info("hitting /vote/{$billId} endpoint")
+        billService.voteBill(billId, bill.rating, bill.feedback)
+        return ResponseEntity(true, HttpStatus.OK)
     }
 }
