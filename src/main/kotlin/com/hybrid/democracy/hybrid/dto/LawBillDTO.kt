@@ -15,6 +15,5 @@ data class LawBillFullDTO(
         val nreg: String,
         val num: Int,
         val orgdat: Int,
-        val citizenId: Long
     )
 }

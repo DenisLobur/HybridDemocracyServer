@@ -1,11 +1,10 @@
 package com.hybrid.democracy.hybrid.service
 
 import com.hybrid.democracy.hybrid.controller.CitizenController
-import com.hybrid.democracy.hybrid.dto.Bill
-import com.hybrid.democracy.hybrid.dto.BillDTO
-import com.hybrid.democracy.hybrid.dto.LawBillFullDTO
+import com.hybrid.democracy.hybrid.dto.*
 import com.hybrid.democracy.hybrid.mapper.BillMapper
 import com.hybrid.democracy.hybrid.repository.BillRepository
+import com.hybrid.democracy.hybrid.repository.CitizenBillRepository
 import com.hybrid.democracy.hybrid.repository.CitizenRepository
 import org.apache.commons.logging.Log
 import org.apache.commons.logging.LogFactory
@@ -18,6 +17,7 @@ import org.springframework.web.client.RestTemplate
 class BillService(
     private val billRepository: BillRepository,
     private val citizenRepository: CitizenRepository,
+    private val citizenBillRepository: CitizenBillRepository,
     private val restTemplate: RestTemplate
 ) {
 
@@ -42,7 +42,6 @@ class BillService(
             date = 1,//billDTO.date,
             rating = billDTO.rating,
             feedback = billDTO.feedback,
-            citizenId = billDTO.citizenId,
             dokId = 1,//billDTO.date,
             orgId = 1,//billDTO.date,
             nreg = "1",//billDTO.nreg
@@ -50,13 +49,47 @@ class BillService(
         return billRepository.save(bill)
     }
 
-    fun getBillById(id: Long): Bill? {
-        return billRepository.findById(id).orElse(null)
+    @Transactional
+    fun getBillsByCitizenId(citizenId: Long): List<Bill> {
+        val citizen = citizenRepository.findById(citizenId)
+            .orElseThrow { IllegalArgumentException("Citizen with ID $citizenId not found") }
+        return citizen.bills.toList()
     }
 
-    fun getBillsByCitizenId(citizenId: Long): List<BillDTO> {
-        val bills = billRepository.findByCitizenId(citizenId)
-        return bills.map { billMapper.billToBillDTO(it) }
+    @Transactional
+    fun updateBillForCitizen(billId: Long, citizenId: Long, updates: Map<String, Any>) {
+//        val citizen = citizenRepository.findById(citizenId)
+//            .orElseThrow { IllegalArgumentException("Citizen with ID $citizenId not found") }
+//        val bill = billRepository.findById(billId)
+//            .orElseThrow { IllegalArgumentException("Bill with ID $billId not found") }
+        val citizenBill = citizenBillRepository.findByCitizenIdAndBillId(citizenId, billId)
+            ?: throw IllegalArgumentException("Bill with ID $billId is not associated with Citizen with ID $citizenId")
+
+
+
+            updates.forEach { (key, value) ->
+                when (key) {
+                    "title" -> citizenBill.title = value as String
+                    //"isVoted" -> bill.isVoted = value as Boolean
+                    //"date" -> bill.date = value as Int
+                    //"dokId" -> bill.dokId = value as Int
+                    //"orgId" -> bill.orgId = value as Int
+                    "rating" -> citizenBill.rating = value as Int
+                    "feedback" -> citizenBill.feedback = value as String
+                    "nreg" -> citizenBill.nreg = value as String
+                    else -> throw IllegalArgumentException("Invalid field: $key")
+                }
+            }
+            citizenBillRepository.save(citizenBill)
+//            citizenBillRepository.save(
+//                CitizenBill(
+//                    citizen = citizen,
+//                    bill = bill,
+//                    title = bill.title,
+//                    rating = bill.rating,
+//                    feedback = bill.feedback
+//                )
+//            )
     }
 
     @Transactional
@@ -80,7 +113,6 @@ class BillService(
                 date = lawBill.orgdat,
                 rating = 0,
                 feedback = "",
-                citizenId = citizenId,
                 dokId = lawBill.dokid,
                 orgId = lawBill.orgid,
                 nreg = lawBill.nreg
@@ -113,13 +145,40 @@ class BillService(
     }
 
     @Transactional
-    fun voteBill(billId: Long, rating: Int, feedback: String) {
+    fun voteBill(billId: Long, citizenId: Long, rating: Int, feedback: String) {
+//        val bill = billRepository.findById(billId)
+//            .orElseThrow { IllegalArgumentException("Bill with ID $billId not found") }
+//
+//        bill.rating = rating
+//        bill.feedback = feedback
+//        bill.isVoted = true
+//        billRepository.save(bill)
+        updateBillForCitizen(billId, citizenId, mapOf("rating" to rating, "feedback" to feedback))
+    }
+
+    @Transactional
+    fun getCitizenBillByCitizenIdAndBillId(citizenId: Long, billId: Long): CitizenBill? {
+        return citizenBillRepository.findByCitizenIdAndBillId(citizenId, billId)
+    }
+
+    @Transactional
+    fun saveBillForCitizen(billId: Long, citizenId: Long) {
         val bill = billRepository.findById(billId)
             .orElseThrow { IllegalArgumentException("Bill with ID $billId not found") }
+        val citizen = citizenRepository.findById(citizenId)
+            .orElseThrow { IllegalArgumentException("Citizen with ID $citizenId not found") }
 
-        bill.rating = rating
-        bill.feedback = feedback
-        bill.isVoted = true
-        billRepository.save(bill)
+//        citizen.bills += bill
+//        citizenRepository.save(citizen)
+        citizenBillRepository.save(
+            CitizenBill(
+                citizen = citizen,
+                bill = bill,
+                title = bill.title,
+                rating = bill.rating,
+                feedback = bill.feedback,
+                nreg = bill.nreg
+            )
+        )
     }
 }

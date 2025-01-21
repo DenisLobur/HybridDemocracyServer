@@ -1,5 +1,6 @@
 package com.hybrid.democracy.hybrid.dto
 
+import com.fasterxml.jackson.annotation.JsonIgnore
 import jakarta.persistence.*
 import jakarta.validation.constraints.NotBlank
 
@@ -8,7 +9,7 @@ import jakarta.validation.constraints.NotBlank
 data class Citizen(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    val id: Long = 0,
+    val citizenId: Long = 0,
 
     @field:NotBlank
     @Column(nullable = false, unique = true)
@@ -22,8 +23,15 @@ data class Citizen(
     @Column(nullable = false, unique = true)
     val email: String,
 
-//    @OneToMany(mappedBy = "citizen", cascade = [CascadeType.ALL], fetch = FetchType.LAZY)
-//    val bills: List<Bill> = mutableListOf()
-//    val bills: List<Bill> = mutableListOf()
+    @JsonIgnore
+//    @OneToMany(mappedBy = "citizen", cascade = [CascadeType.ALL], orphanRemoval = true)
+//    var bills: MutableList<Bill> = mutableListOf()
+    @ManyToMany
+    @JoinTable(
+        name = "citizen_bill",
+        joinColumns = [JoinColumn(name = "citizen_id")],
+        inverseJoinColumns = [JoinColumn(name = "bill_id")]
+    )
+    var bills: MutableList<Bill> = mutableListOf()
 
 )

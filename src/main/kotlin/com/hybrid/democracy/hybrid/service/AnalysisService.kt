@@ -2,14 +2,33 @@ package com.hybrid.democracy.hybrid.service
 
 import com.hybrid.democracy.hybrid.dto.Analysis
 import com.hybrid.democracy.hybrid.repository.AnalysisRepository
+import org.springframework.ai.chat.model.ChatModel
+import org.springframework.ai.chat.prompt.PromptTemplate
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.jdbc.core.JdbcTemplate
 import org.springframework.stereotype.Service
 
 @Service
 class AnalysisService @Autowired constructor(
+    private val chatModel: ChatModel,
     private val analysisRepository: AnalysisRepository,
 ) {
+
+    fun getOpenAIResponse(question: String): String {
+        val promptTemplate = PromptTemplate(question)
+        val prompt = promptTemplate.create()
+        val response = chatModel.call(prompt)
+
+        return response.result.output.content
+    }
+
+    fun summarizeText(longText: String): String {
+        val promptTemplate = PromptTemplate("Скороти текст і дай коротке тлумачення українською мовою: $longText")
+        val prompt = promptTemplate.create()
+        val response = chatModel.call(prompt)
+
+        return response.result.output.content
+    }
 
     fun analyzeAndStoreBill(billId: Long, citizenId: Long, feedback: String, rating: Int) {
         val sentiment = analyze(feedback, rating)

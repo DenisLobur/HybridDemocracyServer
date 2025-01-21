@@ -1,5 +1,6 @@
 package com.hybrid.democracy.hybrid.service
 
+import com.hybrid.democracy.hybrid.dto.Bill
 import com.hybrid.democracy.hybrid.dto.Citizen
 import com.hybrid.democracy.hybrid.dto.CitizenDTO
 import com.hybrid.democracy.hybrid.repository.CitizenRepository
@@ -38,6 +39,10 @@ class CitizenService(private val citizenRepository: CitizenRepository) {
 
     fun getCitizenByEmail(email: String): Citizen? {
         return citizenRepository.findByEmail(email)
+    }
+
+    fun findBillsByCitizenId(citizenId: Long): List<Bill>? {
+        return citizenRepository.findById(citizenId).orElse(null)?.bills
     }
 
 }

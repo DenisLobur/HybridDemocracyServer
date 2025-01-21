@@ -1,5 +1,6 @@
 package com.hybrid.democracy.hybrid.dto
 
+import com.fasterxml.jackson.annotation.JsonIgnore
 import jakarta.persistence.*
 import jakarta.validation.constraints.NotBlank
 import jakarta.validation.constraints.NotNull
@@ -9,36 +10,36 @@ import jakarta.validation.constraints.NotNull
 data class Bill(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    val id: Long = 0,
+    val billId: Long = 0,
 
-    @field:NotBlank
-    @Column(nullable = false, unique = false)
-    val title: String,
+    @Column
+    var title: String?,
 
-    @Column(nullable = false, unique = false)
-    var isVoted: Boolean,
+    @Column
+    var isVoted: Boolean?,
 
-    @Column(nullable = false, unique = false)
-    val date: Int,
+    @Column
+    var date: Int?,
 
-    @field:NotNull
-    @Column(nullable = false, unique = true)
-    val dokId: Int,
+    @Column
+    var dokId: Int?,
 
-    @Column(nullable = false, unique = false)
-    val orgId: Int,
+    @Column
+    var orgId: Int?,
 
-    @Column(nullable = false, unique = false)
-    var rating: Int,
+    @Column
+    var rating: Int?,
 
-    @Column(nullable = false, unique = false)
-    var feedback: String,
+    @Column
+    var feedback: String?,
 
-    @Column(nullable = false, unique = false)
-    val nreg: String,
+    @Column
+    var nreg: String?,
 
-//    @ManyToOne(fetch = FetchType.LAZY)
+    @JsonIgnore
+//    @ManyToOne
 //    @JoinColumn(name = "citizen_id")
-//    var citizen: Citizen
-    val citizenId: Long
+//    var citizen: Citizen? = null
+    @ManyToMany(mappedBy = "bills")
+    var citizens: MutableList<Citizen> = mutableListOf()
 )
