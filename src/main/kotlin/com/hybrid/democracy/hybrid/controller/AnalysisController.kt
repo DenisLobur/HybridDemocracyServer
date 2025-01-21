@@ -30,8 +30,6 @@ class AnalysisController(private val analysisService: AnalysisService) {
         return analysisService.summarizeText(sanitizedText)
     }
 
-
-
     @PostMapping
     fun analyzeSentiment(@RequestBody request: AnalysisDTO): ResponseEntity<Boolean> {
         val sentimentAnalysisResult = analysisService.analyzeAndStoreBill(

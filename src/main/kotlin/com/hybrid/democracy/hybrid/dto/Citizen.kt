@@ -24,8 +24,6 @@ data class Citizen(
     val email: String,
 
     @JsonIgnore
-//    @OneToMany(mappedBy = "citizen", cascade = [CascadeType.ALL], orphanRemoval = true)
-//    var bills: MutableList<Bill> = mutableListOf()
     @ManyToMany
     @JoinTable(
         name = "citizen_bill",

@@ -1,6 +1,5 @@
 package com.hybrid.democracy.hybrid.controller
 
-import com.hybrid.democracy.hybrid.controller.HomeController.Companion
 import com.hybrid.democracy.hybrid.dto.Bill
 import com.hybrid.democracy.hybrid.dto.Citizen
 import com.hybrid.democracy.hybrid.dto.CitizenDTO

@@ -47,13 +47,6 @@ class BillController(private val billService: BillService) {
         return ResponseEntity(HttpStatus.OK)
     }
 
-//    @GetMapping("/pull/{citizenId}")
-//    fun pullBillsForCitizen(@PathVariable citizenId: Long): ResponseEntity<List<BillDTO>> {
-//        logger.info("hitting /pull/{$citizenId} endpoint")
-//        val billsList = billService.getBillsByCitizenId(citizenId)
-//        return ResponseEntity(billsList, HttpStatus.OK)
-//    }
-
     @GetMapping("/text/{nreg}")
     fun pullBillTextByNreg(@PathVariable nreg: String): ResponseEntity<String> {
         logger.info("hitting /text/{$nreg} endpoint")
@@ -62,19 +55,17 @@ class BillController(private val billService: BillService) {
     }
 
     @PostMapping("/{billId}/citizen/{citizenId}/vote")
-    fun voteBill(@PathVariable billId: Long, @PathVariable citizenId: Long, @RequestBody bill: VoteDTO): ResponseEntity<Boolean> {
+    fun voteBill(
+        @PathVariable billId: Long,
+        @PathVariable citizenId: Long,
+        @RequestBody bill: VoteDTO
+    ): ResponseEntity<Boolean> {
         logger.info("hitting voteBill endpoint with billId: $billId, citizenId: $citizenId")
 
         billService.voteBill(billId, citizenId, bill.rating, bill.feedback)
-
         return ResponseEntity(true, HttpStatus.OK)
     }
 
-//    @GetMapping("/{billId}/citizens")
-//    fun getCitizensForBill(@PathVariable billId: Long): List<Citizen>? {
-//        logger.info("hitting /{$billId}/citizens endpoint")
-//        return billService.findCitizensByBillId(billId)
-//    }
 
     @PostMapping("/{billId}/citizen/{citizenId}")
     fun saveBillForCitizen(@PathVariable billId: Long, @PathVariable citizenId: Long): ResponseEntity<Void> {

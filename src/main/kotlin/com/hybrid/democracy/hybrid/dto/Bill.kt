@@ -2,8 +2,6 @@ package com.hybrid.democracy.hybrid.dto
 
 import com.fasterxml.jackson.annotation.JsonIgnore
 import jakarta.persistence.*
-import jakarta.validation.constraints.NotBlank
-import jakarta.validation.constraints.NotNull
 
 @Entity
 @Table(name = "bill")
@@ -37,9 +35,6 @@ data class Bill(
     var nreg: String?,
 
     @JsonIgnore
-//    @ManyToOne
-//    @JoinColumn(name = "citizen_id")
-//    var citizen: Citizen? = null
     @ManyToMany(mappedBy = "bills")
     var citizens: MutableList<Citizen> = mutableListOf()
 )

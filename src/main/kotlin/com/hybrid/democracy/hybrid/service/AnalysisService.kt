@@ -5,7 +5,6 @@ import com.hybrid.democracy.hybrid.repository.AnalysisRepository
 import org.springframework.ai.chat.model.ChatModel
 import org.springframework.ai.chat.prompt.PromptTemplate
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.jdbc.core.JdbcTemplate
 import org.springframework.stereotype.Service
 
 @Service
