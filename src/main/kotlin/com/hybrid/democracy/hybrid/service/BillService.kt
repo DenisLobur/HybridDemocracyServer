@@ -160,7 +160,7 @@ class BillService(
                 rating = bill.rating,
                 feedback = bill.feedback,
                 nreg = bill.nreg,
-                sentiment = "neutral"
+                sentiment = "Neutral"
             )
         )
     }

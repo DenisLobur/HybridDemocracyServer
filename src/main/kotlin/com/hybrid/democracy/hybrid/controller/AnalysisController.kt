@@ -1,11 +1,8 @@
 package com.hybrid.democracy.hybrid.controller
 
-import com.hybrid.democracy.hybrid.dto.AnalysisDTO
 import com.hybrid.democracy.hybrid.service.AnalysisService
 import org.apache.commons.logging.Log
 import org.apache.commons.logging.LogFactory
-import org.springframework.http.HttpStatus
-import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
@@ -23,23 +20,10 @@ class AnalysisController(private val analysisService: AnalysisService) {
     @PostMapping("/summarize")
     fun summarizeText(@RequestBody longText: String): String {
         logger.info("hitting /summarize endpoint")
-        val sanitizedText = longText.replace("\r\n", " ").replace("\n", " ")
+        val sanitizedText = longText.replace("\r\n", " ").replace("\n", " ").replace(Regex("[^A-Za-z0-9]"), " ")
 
         logger.info("sanitized: $sanitizedText")
 
         return analysisService.summarizeText(sanitizedText)
     }
-
-//    @PostMapping
-//    fun analyzeSentiment(@RequestBody request: AnalysisDTO): ResponseEntity<Boolean> {
-//        analysisService.analyzeAndStoreSentiment(
-//            billId = request.billId,
-//            citizenId = request.citizenId,
-//            feedback = request.feedback,
-//            rating = request.rating
-//        )
-//
-//        logger.info("hitting /sentiment endpoint")
-//        return ResponseEntity(true, HttpStatus.OK)
-//    }
 }
