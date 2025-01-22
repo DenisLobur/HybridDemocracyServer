@@ -27,6 +27,9 @@ data class CitizenBill(
     var feedback: String?,
 
     @Column
+    var sentiment: String?,
+
+    @Column
     var nreg: String?,
 
 )

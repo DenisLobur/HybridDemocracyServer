@@ -30,16 +30,16 @@ class AnalysisController(private val analysisService: AnalysisService) {
         return analysisService.summarizeText(sanitizedText)
     }
 
-    @PostMapping
-    fun analyzeSentiment(@RequestBody request: AnalysisDTO): ResponseEntity<Boolean> {
-        val sentimentAnalysisResult = analysisService.analyzeAndStoreBill(
-            billId = request.billId,
-            citizenId = request.citizenId,
-            feedback = request.feedback,
-            rating = request.rating
-        )
-
-        logger.info("hitting /sentiment endpoint")
-        return ResponseEntity(true, HttpStatus.OK)
-    }
+//    @PostMapping
+//    fun analyzeSentiment(@RequestBody request: AnalysisDTO): ResponseEntity<Boolean> {
+//        analysisService.analyzeAndStoreSentiment(
+//            billId = request.billId,
+//            citizenId = request.citizenId,
+//            feedback = request.feedback,
+//            rating = request.rating
+//        )
+//
+//        logger.info("hitting /sentiment endpoint")
+//        return ResponseEntity(true, HttpStatus.OK)
+//    }
 }

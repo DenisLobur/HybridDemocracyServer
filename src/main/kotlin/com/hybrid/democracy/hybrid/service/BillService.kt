@@ -20,6 +20,7 @@ class BillService(
     private val billRepository: BillRepository,
     private val citizenRepository: CitizenRepository,
     private val citizenBillRepository: CitizenBillRepository,
+    private val analysisService: AnalysisService,
     private val restTemplate: RestTemplate
 ) {
 
@@ -71,8 +72,35 @@ class BillService(
                 }
             }
 
+            citizenBill.sentiment = analysisService.analyzeAndStoreSentiment(
+                billId = billId,
+                citizenId = citizenId,
+                feedback = citizenBill.feedback ?: "neutral",
+                rating = citizenBill.rating ?: 0
+            )
+
             citizenBillRepository.save(citizenBill)
     }
+
+//    private fun analyze(feedback: String, rating: Int): String {
+//        val basedOnFeedback = when {
+//            feedback.contains("good", ignoreCase = true) -> "positive"
+//            feedback.contains("bad", ignoreCase = true) -> "negative"
+//            else -> "neutral"
+//        }
+//
+//        val basedOnRating =  when {
+//            rating in 4..5 -> "positive"
+//            rating in 1..2 -> "negative"
+//            else -> "neutral"
+//        }
+//
+//        return if (basedOnRating == basedOnFeedback) {
+//            basedOnRating
+//        } else {
+//            "neutral"
+//        }
+//    }
 
     @Transactional
     fun fetchAndStoreBillData(citizenId: Long) {
@@ -131,7 +159,8 @@ class BillService(
                 title = bill.title,
                 rating = bill.rating,
                 feedback = bill.feedback,
-                nreg = bill.nreg
+                nreg = bill.nreg,
+                sentiment = "neutral"
             )
         )
     }

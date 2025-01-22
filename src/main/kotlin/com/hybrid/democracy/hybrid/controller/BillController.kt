@@ -30,7 +30,7 @@ class BillController(private val billService: BillService) {
     }
 
     @PutMapping("/{billId}/citizen/{citizenId}")
-    fun updateBillForCitizen(
+    fun saveBillForCitizen(
         @PathVariable billId: Long,
         @PathVariable citizenId: Long,
         @RequestBody updates: Map<String, Any>
